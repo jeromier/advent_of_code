@@ -63,8 +63,8 @@ def is_safe_with_dampener(report):
 
 		# It could be fixed by removing the element where the error showed up
 		# or the one right before it
-		if (is_safe([x for i, x in enumerate(report) if i != problem_index - 1]) or
-			is_safe([x for i, x in enumerate(report) if i != problem_index])):
+		if (is_safe(report[:problem_index-1] + report[problem_index:]) or
+			is_safe(report[:problem_index] + report[problem_index+1:])):
 			return True
 
 		# couldn't fix the polarity error
@@ -82,8 +82,8 @@ def is_safe_with_dampener(report):
 
 	# A magnitude error can possibly be fixed by removing the element
 	# where the problem was identified OR the one before it
-	if (is_safe([x for i, x in enumerate(report) if i != problem_index - 1]) or
-		is_safe([x for i, x in enumerate(report) if i != problem_index])):
+	if (is_safe(report[:problem_index-1] + report[problem_index:]) or
+		is_safe(report[:problem_index] + report[problem_index+1:])):
 		return True
 
 	# We weren't able to fix the error(s) so return false
