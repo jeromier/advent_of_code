@@ -1,6 +1,10 @@
 import re
 
 def problem_1():
+	""" Find all of the instructions fitting the pattern
+	    mul(int1,int2) and sum the multiplication of
+	    the integers
+	"""
 	with open('input.txt') as dataset:
 		total = 0
 		for line in dataset:
@@ -13,6 +17,9 @@ def problem_1():
 			
 
 def problem_2():
+	""" Same as above, but exclude everything after a don't() 
+	    unless followed by a do()
+	"""
 	with open('input.txt') as dataset:
 		program = ''.join(dataset.read().splitlines())
 		total = 0
