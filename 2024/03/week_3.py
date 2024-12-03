@@ -21,17 +21,20 @@ def problem_2():
 	    unless followed by a do()
 	"""
 	with open('input.txt') as dataset:
+		# the input is treated as one continuous program
+		# so join the lines together before processing
 		program = ''.join(dataset.read().splitlines())
 		total = 0
+
 		# preprocess lines by removing sections 
 		# between a don't and a do instruction
 		program = ''.join(re.split("don't\(\).*?do\(\)",program))
 		
-
 		# then remove anything after a don't that wasn't closed
 		program = program[:program.find("don't")]
 
 		multiply_instructions = re.findall('mul\(\d{1,3},\d{1,3}\)',program)
+		
 		for instruction in multiply_instructions:
 			numbers = [int(x) for x in instruction[4:-1].split(',')]
 			total += numbers[0] * numbers[1]
@@ -41,7 +44,4 @@ def problem_2():
 if __name__ == '__main__':
 	print(problem_1())
 	print(problem_2())
-
-
-
-
+	
