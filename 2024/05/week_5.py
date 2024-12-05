@@ -1,3 +1,5 @@
+import time
+
 def update_is_valid(print_update, rules):
 	""" Tests if the pages in the update follow
 		the ordering rules
@@ -13,25 +15,27 @@ def update_is_valid(print_update, rules):
 				return False
 	return True
 
-def fix_update(print_update, rules):
-	""" Terribly inefficient.
-		Start at the back and move the element up
-		until it's before everything that should be after it.
-		Then repeat until the state is valid
+def rightmost(pages, rules):
+	""" The rightmost page will have no
+		rules that require a page to come before it
 	"""
-	
-	while not update_is_valid(print_update,rules):
-		for i in reversed(range(len(print_update))):
-			new_index = i
-			current_element = print_update[i]
-			for j in reversed(range(i)):
-				if (current_element in rules and 
-					print_update[j] in rules[current_element]):
-					new_index = j
-			print_update.insert(new_index,print_update.pop(i))
+	for page in pages:
+		if page not in rules:
+			return page
+		else:
+			if not any(later_page in pages for later_page in rules[page]):
+				return page
 
-	
-	return print_update
+def fix_update(print_update,rules):
+	ordered_pages = []
+
+	while len(print_update) > 0:
+		right_page = rightmost(print_update,rules)
+		ordered_pages.insert(0,right_page)
+		print_update.remove(right_page)
+
+	return ordered_pages
+
 
 def get_rules(dataset):
 	""" Creates a dictionary that shows which pages 
@@ -86,4 +90,5 @@ def problem_2():
 if __name__ == '__main__':
 	# print(problem_1())
 	print(problem_2())
+
 	
