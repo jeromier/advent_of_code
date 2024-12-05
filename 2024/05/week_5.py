@@ -1,5 +1,3 @@
-import time
-
 def update_is_valid(print_update, rules):
 	""" Tests if the pages in the update follow
 		the ordering rules
