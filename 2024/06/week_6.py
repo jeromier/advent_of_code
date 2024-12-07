@@ -40,6 +40,8 @@ class Guard:
 		self.x = x_coord
 		self.y = y_coord
 		self.positions.append((x_coord,y_coord))
+
+		assert (x_coord,y_coord,self.orientation) not in self.oriented_positions
 		self.oriented_positions.append((x_coord,y_coord,self.orientation))
 
 	def unique_positions(self):
@@ -50,21 +52,34 @@ class Map:
 	def __init__(self, filename):
 		self.map = []
 		self.active_guards = []
+		self.initial_guards = []
 		self.retired_guards = []
 		self.guard_obstacles = []
-		self.find_obstacles = False
 
 		current_row = 0
 		with open(filename) as mapfile:
 			for line in mapfile:
-				self.map.append(line)
+				self.map.append(list(line))
 				if '^' in line:
 					pos = line.find('^')
 					self.active_guards.append(Guard(current_row,pos,'n'))
+					self.initial_guards.append(Guard(current_row,pos,'n'))
 				current_row += 1
+
 
 		self.rows = len(self.map)
 		self.cols = len(self.map[0])
+
+	def add_obstacle(self,x,y):
+		self.map[x][y] = '#'
+
+	def remove_obstacle(self,x,y):
+		self.map[x][y] = '.'
+
+	def reset_guards(self):
+		self.active_guards = []
+		for guard in self.initial_guards:
+			self.active_guards.append(Guard(guard.x,guard.y,'n'))
 
 	def step(self):
 		for guard in self.active_guards:
@@ -80,77 +95,6 @@ class Map:
 				guard.update_position(x,y)
 			else:
 				guard.turn_right()
-				# check for guard cycles after a turn if find_obstacles is on
-				if self.find_obstacles:
-					self.check_for_guard_cycle()
-
-	def check_for_guard_cycle(self):
-		""" Check if we can add an obstacle that would cause a cycle.
-			Consider the current directed movement
-			Allow the guard to make a turn at every possible location
-			Advance the guard until it would hit another obstacle.
-			If at any point in that process it overlaps a previous oriented position
-			that indicates a cycle
-		"""
-
-		# assuming this happens right after a turn
-
-		for guard in self.active_guards:
-
-
-			# scan the rest of the row
-			x,y = guard.x, guard.y
-			orientation = guard.orientation
-
-			if orientation == 'n':
-				# move along north and check cols east
-				for row in range(x,-1,-1):
-					for col in range(y,self.cols):
-
-						if self.map[row][col] == '#':
-							break
-						if (row,col,'e') in guard.oriented_positions:
-							self.guard_obstacles.append((row,y))
-							break
-					if self.map[row][y] == '#':
-							break
-
-			elif orientation == 'e':
-				# move along east and check south
-				for col in range(y,self.cols):
-					for row in range(x,self.rows):
-						if self.map[row][col] == '#':
-							break
-						if (row,col,'s') in guard.oriented_positions:
-							self.guard_obstacles.append((x,col))
-							break
-					if self.map[x][col] == '#':
-							break
-			elif orientation == 's':
-				# move along south and check west
-				for row in range(x,self.rows):
-					for col in range(y,-1,-1):
-						if self.map[row][col] == '#':
-							break
-						if (row,col,'w') in guard.oriented_positions:
-							self.guard_obstacles.append((row,y))
-							break
-					if self.map[row][y] == '#':
-							break
-			elif orientation == 'w':
-				# move along west and check north
-				for col in range(y,-1,-1):
-					for row in range(x,-1,-1):
-						if self.map[row][col] == '#':
-							break
-						if (row,col,'n') in guard.oriented_positions:
-							self.guard_obstacles.append((x,col))
-							break
-					if self.map[x][col] == '#':
-							break
-
-
-
 			
 
 
@@ -159,9 +103,6 @@ def problem_1():
 
 	while len(current_map.active_guards) > 0:
 		current_map.step()
-
-	print(current_map.retired_guards[0].num_turns)
-
 
 	return current_map.retired_guards[0].unique_positions()
 
@@ -175,10 +116,26 @@ def problem_2():
 	while len(current_map.active_guards) > 0:
 		current_map.step()
 
-	# print(current_map.guard_obstacles)
-	#print(current_map.retired_guards[0].positions)
-	# print("positions:",current_map.retired_guards[0].unique_positions())
-	return len(current_map.guard_obstacles)
+	# get the entire path except for the starting point
+	path = set(current_map.retired_guards[0].positions[1:])
+
+	loops = 0
+
+	iterations = 0
+	for location in path:
+		iterations += 1
+		print('testing',iterations,'of',len(path))
+		current_map.reset_guards()
+		try:
+			current_map.add_obstacle(location[0],location[1])
+			while len(current_map.active_guards) > 0:
+				current_map.step()
+		except AssertionError:
+			loops+=1
+		finally:
+			current_map.remove_obstacle(location[0],location[1])
+
+	return loops
 
 
 if __name__ == '__main__':
