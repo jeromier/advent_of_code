@@ -49,12 +49,15 @@ def expand_data_for_part2(data):
 
 def fill_space_without_fragmentation(data):
 	back_pointer = len(data) - 2 # pointing to last data element
+	end_point = 0 
 
-	while back_pointer > 0:
+	while back_pointer > end_point:
 		front_pointer = 1
 		# find the next spot big enough for the last data element
+		# print('looking for a spot for file',data[back_pointer][0])
 		while front_pointer < back_pointer:
 			if data[front_pointer] >= data[back_pointer][1]:
+				# print('found it at',front_pointer)
 				data[front_pointer] -= data[back_pointer][1]
 				data[back_pointer-1] += data[back_pointer][1] + data[back_pointer+1]
 				data_block = data.pop(back_pointer)
@@ -62,6 +65,8 @@ def fill_space_without_fragmentation(data):
 
 				data.insert(front_pointer,data_block)
 				data.insert(front_pointer,0)
+				back_pointer += 2
+				end_point += 2
 
 				break
 
@@ -114,35 +119,22 @@ def problem_1():
 		total = check_sum(filled_data)
 		return total
 
-def problem_1_refactor():
-	""" Do something
-	"""
-	with open('test_input.txt') as dataset:
-		data = dataset.read().strip()
-
-		expanded_data = expand_data_for_part2(data)
-		print(expanded_data)
-		filled_data = fill_space_refactor(expanded_data)
-		print(filled_data)
-		
-		total = check_sum_part_2(filled_data)
-		return total
-
 def problem_2():
 	""" Do something
 	"""
-	with open('test_input.txt') as dataset:
+	with open('input.txt') as dataset:
 		data = dataset.read().strip()
 
 		expanded_data = expand_data_for_part2(data)
-		print(expanded_data)
+		# print(expanded_data)
 		compact_data = fill_space_without_fragmentation(expanded_data)
-		# return
+		# print(len(compact_data))
+
 		result = check_sum_part_2(compact_data)
 
 		return result
 
 if __name__ == '__main__':
 	# print(problem_1())
-	# print(problem_2())
+	print(problem_2())
 	
