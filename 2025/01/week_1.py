@@ -18,7 +18,7 @@ def get_code(filename='example.txt',start=50):
 	all_crossed_zeroes = 0
 	
 	# It will cross zero if it goes from positive to negative
-	# and once for every 100 you turn it (unless it started on zero)
+	# and once for every 100 you turn it (unless it started and ended on zero)
 	
 	for rotation in combination:
 		crossed_zeroes = 0
