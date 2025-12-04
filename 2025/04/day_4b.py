@@ -16,16 +16,19 @@ def get_floorplan(filename='example.txt'):
 
 def get_accessible_rolls(floorplan):
 	counts = scipy.signal.convolve2d(floorplan, numpy.ones((3,3)), mode='same')
-	return (counts*floorplan < 5).sum() - (counts*floorplan == 0).sum()
+	only_rolls = counts*floorplan
+	return (only_rolls < 5).sum() - (only_rolls == 0).sum()
 
 def get_accessible_rolls_p2(floorplan):
 	counts = scipy.signal.convolve2d(floorplan, numpy.ones((3,3)), mode='same')
-	rolls = (counts*floorplan < 5).sum() - (counts*floorplan == 0).sum()
+	only_rolls = counts*floorplan
+	rolls = (only_rolls < 5).sum() - (only_rolls == 0).sum()
 	total_rolls = rolls
 	while rolls > 0:
 		floorplan[counts < 5] = 0
 		counts = scipy.signal.convolve2d(floorplan, numpy.ones((3,3)), mode='same')
-		rolls = (counts*floorplan < 5).sum() - (counts*floorplan == 0).sum()
+		only_rolls = counts*floorplan
+		rolls = (only_rolls < 5).sum() - (only_rolls == 0).sum()
 		total_rolls += rolls
 	return total_rolls
 
