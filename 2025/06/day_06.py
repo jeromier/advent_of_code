@@ -34,6 +34,7 @@ def solve_math_worksheet_p2(filename='example.txt'):
 	
 	while index >= 0:
 		problem = []
+		# build a single problem
 		while True:
 			number = ''
 			for row in problems[:-1]:
