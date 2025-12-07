@@ -53,18 +53,6 @@ def count_quantum_splits(manifold):
 	
 	return sum(positions.values())
 
-# def quantum_splits(manifold, current_row, current_position, paths=[0]):
-# 	if current_row >= len(manifold):
-# 		paths[0] += 1
-# 		return # return what?
-
-# 	if manifold[current_row][current_position] == '^':
-# 		quantum_splits(manifold,current_row+1,current_position-1, paths)
-# 		quantum_splits(manifold,current_row+1,current_position+1, paths)		
-# 	else:
-# 		quantum_splits(manifold,current_row+1,current_position, paths)
-
-# 	return paths[0]
 
 def p1(filename='example.txt'):
 	return count_splits(read_manifold(filename))
