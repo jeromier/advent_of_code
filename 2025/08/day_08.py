@@ -95,6 +95,6 @@ def p2(filename='example.txt'):
 	
 
 #print(p1())
-#print(p1('input.txt',connections=1000))
+print(p1('input.txt',connections=1000))
 print(p2('input.txt'))
 
