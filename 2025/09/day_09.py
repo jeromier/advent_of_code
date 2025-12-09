@@ -22,8 +22,8 @@ def get_all_rectangles(tiles):
 	return sorted(rectangles,reverse=True)
 
 def get_full_rectangle(rectangle):
-	'''Use the two corner points of a rectangle
-	to find the other points.'''
+	"""Use the two corner points of a rectangle
+	to find the other points."""
 	points = []
 	point_a = rectangle[1][0]
 	point_b = rectangle[1][1]
