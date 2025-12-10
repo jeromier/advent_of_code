@@ -1,0 +1,5 @@
+# Check for joltage values that are only on a single button
+
+# Group buttons by 'maximum presses'
+
+# Look for values that only occur with another value
