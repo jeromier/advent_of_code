@@ -6,6 +6,9 @@ class ServerGraph(object):
 		self.servers = defaultdict(list)
 		self.exits_from = defaultdict(int)
 
+	def reset(self):
+		self.exits_from = defaultdict(int)
+
 	def load_from_file(self,filename):
 		with open(filename) as server_file:
 			for line in server_file:
@@ -52,18 +55,14 @@ def p1(filename='example.txt'):
 def p2(filename='example2.txt'):
 	sg = ServerGraph()
 	sg.load_from_file(filename)
-	exits = sg.count_exits(start='svr',target='fft')
-	svr_to_fft = exits
+	
+	svr_to_fft = sg.count_exits(start='svr',target='fft')
+	sg.reset()
 
-	sg = ServerGraph()
-	sg.load_from_file(filename)
-	exits = sg.count_exits(start='fft',target='dac')
-	fft_to_dac = exits
+	fft_to_dac = sg.count_exits(start='fft',target='dac')
+	sg.reset()
 
-	sg = ServerGraph()
-	sg.load_from_file(filename)
-	exits = sg.count_exits(start='dac',target='out')
-	dac_to_out = exits
+	dac_to_out = sg.count_exits(start='dac',target='out')
 
 	return svr_to_fft * fft_to_dac * dac_to_out
 
